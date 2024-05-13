@@ -7,6 +7,6 @@
 
 #### Cài đặt
 
-- Đổi host trong file <mark>tasuku\data\AppContainer.kt</mark> thành host và port đã cài ở phần server
+- Đổi host trong file *tasuku\data\AppContainer.kt* thành host và port đã cài ở phần server
   
 ![image](https://github.com/BaoVKU/tasuku_app_repository/assets/164776548/c782f5bc-3249-49bb-b4c4-a201e4ec76ef)
