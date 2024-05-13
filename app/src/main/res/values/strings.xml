@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Tasuku</string>
+    <string name="nav_group_label">Group</string>
+    <string name="nav_notification_label">Notification</string>
+    <string name="nav_home_label">Home</string>
+    <string name="nav_message_label">Message</string>
+    <string name="nav_calendar_label">Calendar</string>
+    <string name="top_bar_home_title">Home</string>
+    <string name="top_bar_group_title">Groups</string>
+    <string name="top_bar_group_member_title">Members</string>
+    <string name="top_bar_chat_title">Chat</string>
+    <string name="top_bar_schedule_title">Schedule</string>
+    <string name="top_bar_notification_title">Notifications</string>
+    <string name="top_bar_profile_title">Profile</string>
+    <string name="top_bar_group_subtitle">%d members</string>
+    <string name="top_bar_task_add_title">Add Task</string>
+    <string name="top_bar_task_edit_title">Edit Task</string>
+    <string name="top_bar_group_manager_title">Group Manager</string>
+    <string name="top_bar_login_title">Login</string>
+    <string name="top_bar_register_title">Register</string>
+    <string name="top_bar_forgot_password_title">Recover Password</string>
+</resources>
