@@ -10,6 +10,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.example.tasuku.ui.screens.ChatScreen
+import com.example.tasuku.ui.screens.FCMScreen
 import com.example.tasuku.ui.screens.GroupDetailScreen
 import com.example.tasuku.ui.screens.GroupScreen
 import com.example.tasuku.ui.screens.HomeScreen
@@ -32,9 +33,14 @@ fun NavigationGraph(
     val backStackEntry = navController.currentBackStackEntryAsState()
     NavHost(
         navController = navController,
-        startDestination = HomeDestination.route,
+        startDestination = LoginDestination.route,
         modifier = modifier
     ) {
+
+        composable("fcm") {
+            FCMScreen()
+        }
+
         composable(LoginDestination.route) {
             LoginScreen(
                 onNavigate = { navController.navigate(it.route) }
@@ -74,8 +80,8 @@ fun NavigationGraph(
         composable(ChatDestination.route) {
             ChatScreen(
                 onNavigate = { navController.navigate(it.route) },
-                onNavigateWithArgs = { destination, id ->
-                    navController.navigate("${destination.route}/$id")
+                onNavigateWithString = { destination, string ->
+                    navController.navigate("${destination.route}/$string")
                 })
         }
 
@@ -133,8 +139,8 @@ fun NavigationGraph(
 
         composable(
             route = MessageScreenDestination.routeWithArgs,
-            arguments = listOf(navArgument("messageId") {
-                type = NavType.IntType
+            arguments = listOf(navArgument("channelId") {
+                type = NavType.StringType
             })
         ) {
             MessageScreen(onNavigateBack = { navController.navigateUp() })
@@ -158,7 +164,12 @@ fun NavigationGraph(
                 type = NavType.StringType
             })
         ) {
-            GroupMemberScreen(onNavigateBack = { navController.navigateUp() })
+            GroupMemberScreen(
+                onNavigateBack = { navController.navigateUp() },
+                onNavigateWithString = { destination, string ->
+                    navController.navigate("${destination.route}/$string")
+                }
+            )
         }
 
     }

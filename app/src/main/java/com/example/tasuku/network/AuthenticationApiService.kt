@@ -1,6 +1,6 @@
 package com.example.tasuku.network
 
-import com.example.tasuku.model.BearerTokenResponse
+import com.example.tasuku.model.LoginResponse
 import com.example.tasuku.model.User
 import retrofit2.Response
 import retrofit2.http.Field
@@ -17,7 +17,7 @@ interface AuthenticationApiService {
         password: String,
         @Field("remember")
         remember: Boolean
-    ): Response<BearerTokenResponse>
+    ): Response<LoginResponse>
 
     @FormUrlEncoded
     @POST("register")

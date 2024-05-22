@@ -14,6 +14,7 @@ import com.example.tasuku.data.repositories.UserRepository
 import com.example.tasuku.dateToDdMmYyyy
 import com.example.tasuku.getPathFromUri
 import com.example.tasuku.model.ErrorResponse
+import io.getstream.chat.android.client.ChatClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -143,6 +144,7 @@ class ProfileViewModel(
     fun logout(context: Context){
         viewModelScope.launch {
             try {
+                ChatClient.instance().disconnect(flushPersistence = true).await()
                 val response = authenticationRepository.logout()
                 if (response.isSuccessful) {
                     Toast.makeText(context, "Logout successful", Toast.LENGTH_SHORT).show()

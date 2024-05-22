@@ -12,7 +12,6 @@ object AppViewModelProvider {
         initializer {
             LoginViewModel(
                 getApplication().container.authenticationRepository,
-                getApplication().container.userRepository,
                 getApplication().container.sharedPreferences
             )
         }
@@ -28,7 +27,6 @@ object AppViewModelProvider {
         initializer {
             HomeViewModel(
                 getApplication().container.workspaceRepository,
-                getApplication().container.userRepository,
                 getApplication().container.sharedPreferences
             )
         }
@@ -68,7 +66,8 @@ object AppViewModelProvider {
         initializer {
             GroupMemberViewModel(
                 getApplication().container.groupRepository,
-                this.createSavedStateHandle()
+                this.createSavedStateHandle(),
+                getApplication().container.sharedPreferences
             )
         }
 
@@ -83,6 +82,10 @@ object AppViewModelProvider {
                 getApplication().container.userRepository,
                 getApplication().container.authenticationRepository
             )
+        }
+
+        initializer {
+            MessageViewModel(this.createSavedStateHandle())
         }
     }
 }

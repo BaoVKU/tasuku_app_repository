@@ -1,6 +1,6 @@
 package com.example.tasuku.data.repositories
 
-import com.example.tasuku.model.BearerTokenResponse
+import com.example.tasuku.model.LoginResponse
 import com.example.tasuku.model.User
 import com.example.tasuku.network.AuthenticationApiService
 import retrofit2.Response
@@ -10,7 +10,7 @@ interface AuthenticationRepository {
         email: String,
         password: String,
         remember: Boolean
-    ): Response<BearerTokenResponse>
+    ): Response<LoginResponse>
 
     suspend fun register(
         name: String,
@@ -28,7 +28,7 @@ class AuthenticationRepositoryImpl(private val authenticationApiService: Authent
         email: String,
         password: String,
         remember: Boolean
-    ): Response<BearerTokenResponse> = authenticationApiService.login(email, password, remember)
+    ): Response<LoginResponse> = authenticationApiService.login(email, password, remember)
 
     override suspend fun register(
         name: String,

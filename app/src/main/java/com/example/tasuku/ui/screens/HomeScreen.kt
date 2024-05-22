@@ -49,7 +49,6 @@ fun HomeScreen(
 ) {
     val context = LocalContext.current
     val homeUiState by homeViewModel.homeUiState.collectAsState()
-    val userUiState by homeViewModel.userUiState.collectAsState()
     val lazyListState = rememberLazyListState()
 
     Scaffold(
@@ -60,7 +59,7 @@ fun HomeScreen(
                 exit = slideOutVertically(targetOffsetY = { -it })
             ) {
                 HomeTopBar(
-                    userAvatar = if (userUiState is UserUiState.Success) (BaseUrl.URL + (userUiState as UserUiState.Success).data.avatar) else "",
+                    userAvatar = BaseUrl.URL + homeViewModel.authUserAvatar,
                     onNavigate = onNavigate
                 )
             }

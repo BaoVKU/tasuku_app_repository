@@ -27,7 +27,13 @@ import com.example.tasuku.data.BaseUrl
 import com.example.tasuku.model.GroupMember
 
 @Composable
-fun GroupMemberItem(modifier: Modifier = Modifier, context: Context, member: GroupMember) {
+fun GroupMemberItem(
+    modifier: Modifier = Modifier,
+    context: Context,
+    authUserId: Int,
+    member: GroupMember,
+    onMessageClick: () -> Unit
+) {
     Row(modifier = modifier.padding(8.dp)) {
         Box(
             modifier = Modifier
@@ -44,18 +50,20 @@ fun GroupMemberItem(modifier: Modifier = Modifier, context: Context, member: Gro
 
         }
         Text(
-            text = member.name,
+            text = member.name + if (member.id == authUserId) " (You)" else "",
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier
                 .weight(1f)
                 .padding(start = 8.dp)
                 .align(Alignment.CenterVertically)
         )
-        IconButton(onClick = { /*TODO*/ }) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_message),
-                contentDescription = "message_icon"
-            )
+        if(member.id != authUserId) {
+            IconButton(onClick = onMessageClick) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_message),
+                    contentDescription = "message_icon"
+                )
+            }
         }
     }
 }

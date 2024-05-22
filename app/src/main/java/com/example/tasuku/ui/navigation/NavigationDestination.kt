@@ -72,7 +72,7 @@ object GroupDetailScreenDestination : NavigationDestination {
 object MessageScreenDestination : NavigationDestination {
     override val route = "message"
     override val titleRes = 0
-    val routeWithArgs = "$route/{messageId}"
+    val routeWithArgs = "$route/{channelId}"
 }
 
 object TaskUpdateScreenDestination : NavigationDestination {

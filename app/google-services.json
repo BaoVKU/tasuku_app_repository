@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "358881004989",
+    "project_id": "tasuku-ec0a1",
+    "storage_bucket": "tasuku-ec0a1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:358881004989:android:1df97c8ab8610450d796d4",
+        "android_client_info": {
+          "package_name": "com.example.tasuku"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpG2oQtjejxa6f5Zf1jitgROUvbOdBleA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

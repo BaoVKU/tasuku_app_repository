@@ -32,21 +32,17 @@ sealed class HomeUiState {
 
 class HomeViewModel(
     private val workspaceRepository: WorkspaceRepository,
-    private val userRepository: UserRepository,
     sharedPreferences: SharedPreferences
 ) : ViewModel() {
     private var _homeUiState = MutableStateFlow<HomeUiState>(HomeUiState.Loading)
     val homeUiState: StateFlow<HomeUiState> = _homeUiState.asStateFlow()
 
-    private var _userUiState = MutableStateFlow<UserUiState>(UserUiState.Loading)
-    val userUiState: StateFlow<UserUiState> = _userUiState.asStateFlow()
-
     val authUserId = sharedPreferences.getInt("user_id", -1)
+    val authUserAvatar = sharedPreferences.getString("user_avatar", "")
 
     init {
         sharedPreferences.edit().putString("joinKey", "").apply()
         getTasks()
-        getUser()
     }
 
     fun getTasks(){
@@ -68,29 +64,6 @@ class HomeViewModel(
                 HomeUiState.Error("Network error")
             } catch (e: HttpException) {
                 HomeUiState.Error("Invalid response")
-            }
-        }
-    }
-
-    private fun getUser(){
-        viewModelScope.launch {
-            _userUiState.value = UserUiState.Loading
-            try {
-                val response = userRepository.getUser()
-                if (response.isSuccessful) {
-                    val data = response.body()
-                    if (data != null) {
-                        _userUiState.value = UserUiState.Success(data)
-                    } else {
-                        _userUiState.value = UserUiState.Error("No user was found")
-                    }
-                } else {
-                    _userUiState.value = UserUiState.Error("Failed to get data")
-                }
-            } catch (e: IOException) {
-                UserUiState.Error("Network error")
-            } catch (e: HttpException) {
-                UserUiState.Error("Invalid response")
             }
         }
     }
