@@ -4,6 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import android.widget.Toast
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.tasuku.data.repositories.TaskRepository
@@ -40,6 +43,8 @@ class HomeViewModel(
     val authUserId = sharedPreferences.getInt("user_id", -1)
     val authUserAvatar = sharedPreferences.getString("user_avatar", "")
 
+    var taskList by mutableStateOf(listOf<TaskResponse>())
+
     init {
         sharedPreferences.edit().putString("joinKey", "").apply()
         getTasks()
@@ -54,6 +59,7 @@ class HomeViewModel(
                     val data = response.body()
                     if (data != null) {
                         _homeUiState.value = HomeUiState.Success(data)
+                        taskList = (_homeUiState.value as HomeUiState.Success).data
                     } else {
                         _homeUiState.value = HomeUiState.Error("No task was found")
                     }
@@ -66,5 +72,9 @@ class HomeViewModel(
                 HomeUiState.Error("Invalid response")
             }
         }
+    }
+
+    fun resetTaskList(){
+        taskList = (_homeUiState.value as HomeUiState.Success).data
     }
 }

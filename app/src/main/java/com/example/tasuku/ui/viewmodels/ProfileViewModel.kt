@@ -14,6 +14,7 @@ import com.example.tasuku.data.repositories.UserRepository
 import com.example.tasuku.dateToDdMmYyyy
 import com.example.tasuku.getPathFromUri
 import com.example.tasuku.model.ErrorResponse
+import com.google.firebase.messaging.FirebaseMessaging
 import io.getstream.chat.android.client.ChatClient
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -141,10 +142,17 @@ class ProfileViewModel(
         }
     }
 
-    fun logout(context: Context){
+    fun logout(context: Context) {
         viewModelScope.launch {
             try {
                 ChatClient.instance().disconnect(flushPersistence = true).await()
+                FirebaseMessaging.getInstance().deleteToken().addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Log.e("FCM", "FCM token deleted")
+                    } else {
+                        Log.e("FCM", "Failed to delete FCM token")
+                    }
+                }
                 val response = authenticationRepository.logout()
                 if (response.isSuccessful) {
                     Toast.makeText(context, "Logout successful", Toast.LENGTH_SHORT).show()

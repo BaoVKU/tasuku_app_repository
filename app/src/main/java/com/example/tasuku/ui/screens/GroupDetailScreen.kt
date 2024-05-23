@@ -35,6 +35,7 @@ import com.example.tasuku.ui.navigation.GroupMemberScreenDestination
 import com.example.tasuku.ui.viewmodels.AppViewModelProvider
 import com.example.tasuku.ui.viewmodels.GroupDetailUiState
 import com.example.tasuku.ui.viewmodels.GroupDetailViewModel
+import com.example.tasuku.ui.viewmodels.GroupMembersUiState
 import com.example.tasuku.ui.viewmodels.TaskViewModel
 
 @Composable
@@ -50,6 +51,8 @@ fun GroupDetailScreen(
     val context = LocalContext.current
     var isMenuExpanded by remember { mutableStateOf(false) }
     val groupDetailUiState by groupDetailViewModel.groupDetailUiState.collectAsState()
+    val groupMembersUiState by groupDetailViewModel.groupMembersUiState.collectAsState()
+    var isOpenFilterDialog by remember { mutableStateOf(false) }
 
     when (groupDetailUiState) {
         is GroupDetailUiState.Loading -> {
@@ -62,7 +65,6 @@ fun GroupDetailScreen(
 
         is GroupDetailUiState.Success -> {
             val group = (groupDetailUiState as GroupDetailUiState.Success).data.group
-            val taskResponses = (groupDetailUiState as GroupDetailUiState.Success).data.tasks
             Scaffold(
                 topBar = {
                     PageTopBar(
@@ -85,7 +87,8 @@ fun GroupDetailScreen(
                         )
                     }
                 }, floatingActionButton = {
-                    TaskAddFAB(onFABClick = onNavigate)
+                    TaskAddFAB(onFABClick = onNavigate,
+                        onFilterClick = { isOpenFilterDialog = true })
                 },
                 modifier = modifier
             ) {
@@ -95,7 +98,7 @@ fun GroupDetailScreen(
                     verticalArrangement = Arrangement.spacedBy(8.dp),
                     modifier = Modifier.padding(horizontal = 8.dp)
                 ) {
-                    items(taskResponses) { taskResponse ->
+                    items(groupDetailViewModel.taskList) { taskResponse ->
                         TaskCard(
                             taskResponse = taskResponse,
                             authUserId = groupDetailViewModel.authUserId,
@@ -109,6 +112,27 @@ fun GroupDetailScreen(
                             })
                     }
                 }
+            }
+            if (isOpenFilterDialog) {
+                FilterScreen(
+                    taskList = groupDetailViewModel.taskList,
+                    groupMemberList = if(groupMembersUiState is GroupMembersUiState.Success) {
+                        (groupMembersUiState as GroupMembersUiState.Success).data
+                    } else {
+                        listOf()
+                    },
+                    onDismissRequest = {
+                        isOpenFilterDialog = false
+                    },
+                    onResetClick = {
+                        groupDetailViewModel.resetTaskList()
+                        isOpenFilterDialog = false
+                    },
+                    onSubmitFilterClick = {
+                        groupDetailViewModel.taskList = it
+                        isOpenFilterDialog = false
+                    }
+                )
             }
         }
     }

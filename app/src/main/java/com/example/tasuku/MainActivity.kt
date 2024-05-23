@@ -16,14 +16,6 @@ import com.google.firebase.messaging.FirebaseMessaging
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        FirebaseMessaging.getInstance().token.addOnCompleteListener { task->
-            if (!task.isSuccessful) {
-                Log.e("FCM", "Fetching FCM registration token failed", task.exception)
-                return@addOnCompleteListener
-            }
-            val token = task.result
-            Log.e("FCM", "FCM token: $token")
-        }
 
         setContent {
             TasukuTheme {

@@ -57,7 +57,7 @@ class DefaultAppContainer(private val appSharedPreferences: SharedPreferences): 
                 .build()
             chain.proceed(request)
         }
-        .addInterceptor(loggingInterceptor)
+//        .addInterceptor(loggingInterceptor)
         .build()
 
     private val retrofit: Retrofit = Retrofit.Builder()

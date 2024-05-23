@@ -388,10 +388,6 @@ fun TaskAddUpdateScreen(
             checkedMemberList = viewModel.taskAddAndUpdateFormState.checkedMemberList,
             onCheckedChanged = { id, isChecked ->
                 viewModel.updateCheckedMemberList(id, isChecked)
-                Log.e(
-                    "TaskAddUpdateScreen",
-                    viewModel.taskAddAndUpdateFormState.checkedMemberList.toString()
-                )
             }
         )
     }

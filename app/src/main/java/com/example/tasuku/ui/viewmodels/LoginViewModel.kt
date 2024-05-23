@@ -15,7 +15,10 @@ import com.example.tasuku.data.repositories.UserRepository
 import com.example.tasuku.model.ErrorResponse
 import com.example.tasuku.model.LoginResponse
 import com.example.tasuku.model.User
+import com.google.firebase.messaging.FirebaseMessaging
 import io.getstream.chat.android.client.ChatClient
+import io.getstream.chat.android.models.Device
+import io.getstream.chat.android.models.PushProvider
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -56,36 +59,47 @@ class LoginViewModel(
                     val data = response.body()
                     if (data != null) {
                         _uiState.value = LoginUiState.Success(data)
+                        saveUserToSharedPreference(data)
 
-                        sharedPreferences.edit()
-                            .putInt("user_id", data.user.id).apply()
-                        sharedPreferences.edit()
-                            .putString("user_email", data.user.email).apply()
-                        sharedPreferences.edit()
-                            .putString("user_name", data.user.name).apply()
-                        sharedPreferences.edit()
-                            .putString("user_avatar", data.user.avatar).apply()
-
-                        sharedPreferences.edit()
-                            .putString("api_token", data.bearer).apply()
-                        sharedPreferences.edit()
-                            .putString("jwt_token", data.jwt).apply()
-
-                     val user  = io.getstream.chat.android.models.User(
-                         id = data.user.id.toString(),
-                         name = data.user.name,
-                         image = BaseUrl.URL + data.user.avatar,
+                        val user = io.getstream.chat.android.models.User(
+                            id = data.user.id.toString(),
+                            name = data.user.name,
+                            image = BaseUrl.URL + data.user.avatar,
                             extraData = mutableMapOf("email" to data.user.email)
-                     )
-                        Log.e("ChatClient", "$user")
-                        Log.e("ChatClient", data.jwt)
-                        ChatClient.instance().connectUser(user, data.jwt).enqueue { result ->
-                            if (result.isSuccess) {
-                                Log.e("ChatClient", "$result")
+                        )
+
+                        val chatClient = ChatClient.instance()
+
+                        chatClient.connectUser(user, data.jwt).enqueue { connectUserResult ->
+                            if (connectUserResult.isSuccess) {
+                                Log.e("ChatClient", "$connectUserResult")
+                                FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+                                    if (!task.isSuccessful) {
+                                        Log.e(
+                                            "FCM",
+                                            "Fetching FCM registration token failed",
+                                            task.exception
+                                        )
+                                        return@addOnCompleteListener
+                                    }
+                                    val token = task.result
+                                    chatClient.addDevice(
+                                        Device(
+                                            token = token,
+                                            pushProvider = PushProvider.FIREBASE,
+                                            providerName = "FCM", // Optional, if adding to multi-bundle named provider
+                                        )
+                                    ).enqueue { addDeviceResult ->
+                                        if (!addDeviceResult.isSuccess) {
+                                            Log.e("ChatClient", "Failed to register device")
+                                        }
+                                    }
+                                }
                             } else {
                                 Log.e("ChatClient", "Failed to connect to chat")
                             }
                         }
+
                     } else {
                         _uiState.value = LoginUiState.Error("Token is null")
                     }
@@ -103,5 +117,20 @@ class LoginViewModel(
             }
         }
     }
-}
 
+    private fun saveUserToSharedPreference(data: LoginResponse) {
+        sharedPreferences.edit()
+            .putInt("user_id", data.user.id).apply()
+        sharedPreferences.edit()
+            .putString("user_email", data.user.email).apply()
+        sharedPreferences.edit()
+            .putString("user_name", data.user.name).apply()
+        sharedPreferences.edit()
+            .putString("user_avatar", data.user.avatar).apply()
+
+        sharedPreferences.edit()
+            .putString("api_token", data.bearer).apply()
+        sharedPreferences.edit()
+            .putString("jwt_token", data.jwt).apply()
+    }
+}

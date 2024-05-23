@@ -16,6 +16,7 @@ import com.google.firebase.messaging.RemoteMessage
 class FCMService : FirebaseMessagingService() {
     override fun onNewToken(token: String) {
         super.onNewToken(token)
+        Log.e("FCMService", "onNewToken: $token")
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
@@ -28,7 +29,7 @@ class FCMService : FirebaseMessagingService() {
 
         val channelId = "Firebase messaging id"
         val channelName = "Firebase messaging"
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {5
             notificationManager.createNotificationChannel(
                 NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
             )
